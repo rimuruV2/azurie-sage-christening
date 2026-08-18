@@ -18,26 +18,26 @@ export type Database = {
         Row: {
           attending: boolean
           created_at: string
-          email: string
           full_name: string
           guest_count: number
           id: string
+          phone: string
         }
         Insert: {
           attending: boolean
           created_at?: string
-          email: string
           full_name: string
           guest_count?: number
           id?: string
+          phone: string
         }
         Update: {
           attending?: boolean
           created_at?: string
-          email?: string
           full_name?: string
           guest_count?: number
           id?: string
+          phone?: string
         }
         Relationships: []
       }
