@@ -27,11 +27,11 @@ const details = [
   },
   {
     label: "The Reception",
-    lines: ["12:00 NN - 2:00 PM", "Jollibee Lower Bicutan", "Merienda to follow"],
+    lines: ["12:00 NN - 2:00 PM", "Jollibee Lower Bicutan"],
   },
   {
     label: "Attire",
-    lines: ["Casual white", "Come comfortable", "Let's keep it light & bright"],
+    lines: ["Casual pink for guests", "White for ninong and ninang", "Come comfortable"],
   },
 ];
 

@@ -138,7 +138,7 @@ export function RsvpForm() {
       )}
 
       <Button type="submit" disabled={pending} className="w-full rounded-full py-6 text-base">
-        {pending ? "Sending…" : "Send RSVP"}
+        {pending ? "Confirming…" : "Confirm"}
       </Button>
     </form>
   );
