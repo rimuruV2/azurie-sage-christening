@@ -7,11 +7,12 @@ export const rsvpSchema = z
       .trim()
       .min(1, { message: "Please tell us your name" })
       .max(100, { message: "Name must be under 100 characters" }),
-    email: z
+    phone: z
       .string()
       .trim()
-      .email({ message: "Please enter a valid email" })
-      .max(255, { message: "Email must be under 255 characters" }),
+      .min(7, { message: "Please enter a valid phone number" })
+      .max(30, { message: "Phone number must be under 30 characters" })
+      .regex(/^[0-9+()\-\s]+$/, { message: "Please enter a valid phone number" }),
     attending: z.boolean(),
     guestCount: z.coerce
       .number()

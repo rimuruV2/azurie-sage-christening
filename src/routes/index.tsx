@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { RsvpForm } from "@/components/RsvpForm";
 
 export const Route = createFileRoute("/")({
@@ -23,15 +23,15 @@ export const Route = createFileRoute("/")({
 const details = [
   {
     label: "The Christening",
-    lines: ["Saturday, October 10, 2026", "10:00 in the morning", "St. Anne's Parish Church"],
+    lines: ["Saturday, October 3, 2026", "11:00 in the morning", "Our Lady of the Holy Rosary Parish"],
   },
   {
     label: "The Reception",
-    lines: ["Immediately following the rite", "12:00 noon", "Rosewood Garden Hall"],
+    lines: ["12:00 NN - 2:00 PM", "Jollibee Lower Bicutan", "Merienda to follow"],
   },
   {
     label: "Attire",
-    lines: ["Soft pastels welcome", "Cream, blush & dusty blue", "Semi-formal"],
+    lines: ["Casual white", "Come comfortable", "Let's keep it light & bright"],
   },
 ];
 
@@ -83,7 +83,7 @@ function Index() {
       <section id="rsvp" className="bg-secondary/30 px-6 py-24">
         <div className="mx-auto max-w-xl">
           <div className="text-center">
-            <h2 className="font-script text-5xl">Kindly RSVP</h2>
+            <h2 className="font-script text-5xl">Kindly confirm</h2>
             <p className="mt-4 text-sm text-muted-foreground">
               Please let us know by September 20, 2026 so we can prepare a seat for you.
             </p>
@@ -97,9 +97,6 @@ function Index() {
       <footer className="px-6 py-12 text-center text-xs text-muted-foreground">
         <p className="font-script text-2xl text-foreground">Azurie Sage</p>
         <p className="mt-3">With love from the family</p>
-        <Link to="/admin" className="mt-4 inline-block underline underline-offset-4">
-          Host sign in
-        </Link>
       </footer>
     </main>
   );
