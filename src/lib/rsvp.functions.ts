@@ -24,7 +24,7 @@ export const submitRsvp = createServerFn({ method: "POST" })
 
     const { error } = await supabase.from("rsvps").insert({
       full_name: data.fullName,
-      email: data.email,
+      phone: data.phone,
       attending: data.attending,
       guest_count: data.guestCount,
     });
@@ -55,7 +55,7 @@ export const listRsvps = createServerFn({ method: "POST" })
 
     const { data, error } = await context.supabase
       .from("rsvps")
-      .select("id, full_name, email, attending, guest_count, created_at")
+      .select("id, full_name, phone, attending, guest_count, created_at")
       .order("created_at", { ascending: false });
 
     if (error) {

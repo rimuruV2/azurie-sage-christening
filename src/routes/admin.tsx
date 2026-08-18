@@ -197,7 +197,7 @@ function GuestList({ email }: { email: string }) {
           <thead className="border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
             <tr>
               <th className="px-5 py-4">Name</th>
-              <th className="px-5 py-4">Email</th>
+              <th className="px-5 py-4">Phone</th>
               <th className="px-5 py-4">Reply</th>
               <th className="px-5 py-4">Guests</th>
               <th className="px-5 py-4">Submitted</th>
@@ -214,7 +214,7 @@ function GuestList({ email }: { email: string }) {
             {rsvps.map((r) => (
               <tr key={r.id} className="border-b border-border/60 last:border-0">
                 <td className="px-5 py-4">{r.full_name}</td>
-                <td className="px-5 py-4 text-muted-foreground">{r.email}</td>
+                <td className="px-5 py-4 text-muted-foreground">{r.phone}</td>
                 <td className="px-5 py-4">{r.attending ? "Attending" : "Declined"}</td>
                 <td className="px-5 py-4">{r.attending ? r.guest_count : "—"}</td>
                 <td className="px-5 py-4 text-muted-foreground">

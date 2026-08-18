@@ -10,7 +10,7 @@ import { rsvpSchema } from "@/lib/rsvp-schema";
 export function RsvpForm() {
   const send = useServerFn(submitRsvp);
   const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [attending, setAttending] = useState<boolean | null>(null);
   const [guestCount, setGuestCount] = useState("1");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -24,7 +24,7 @@ export function RsvpForm() {
       return;
     }
 
-    const parsed = rsvpSchema.safeParse({ fullName, email, attending, guestCount });
+    const parsed = rsvpSchema.safeParse({ fullName, phone, attending, guestCount });
     if (!parsed.success) {
       const next: Record<string, string> = {};
       for (const issue of parsed.error.issues) {
@@ -83,17 +83,18 @@ export function RsvpForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email address</Label>
+        <Label htmlFor="phone">Phone number</Label>
         <Input
-          id="email"
-          type="email"
-          value={email}
-          maxLength={255}
-          autoComplete="email"
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="maria@example.com"
+          id="phone"
+          type="tel"
+          inputMode="tel"
+          value={phone}
+          maxLength={30}
+          autoComplete="tel"
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="0917 123 4567"
         />
-        {errors["email"] && <p className="text-xs text-destructive">{errors["email"]}</p>}
+        {errors["phone"] && <p className="text-xs text-destructive">{errors["phone"]}</p>}
       </div>
 
       <fieldset className="space-y-3">
