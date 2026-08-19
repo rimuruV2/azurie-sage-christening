@@ -1,19 +1,8 @@
-import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { RsvpForm } from "@/components/RsvpForm";
 import { PhotoSlideshow } from "@/components/PhotoSlideshow";
-import feedingBottles from "@/assets/wishlist/feeding-bottles.jpeg.asset.json";
-import diaperBag from "@/assets/wishlist/diaper-bag.jpeg.asset.json";
+import { Wishlist } from "@/components/Wishlist";
 
-import storybooks from "@/assets/wishlist/storybooks.jpeg.asset.json";
-import readingBooks from "@/assets/wishlist/reading-books.jpeg.asset.json";
-import foodProcessor from "@/assets/wishlist/food-processor.jpeg.asset.json";
-import diapers from "@/assets/wishlist/diapers.jpeg.asset.json";
-import laundryDetergent from "@/assets/wishlist/laundry-detergent.jpeg.asset.json";
-import fabricSoftener from "@/assets/wishlist/fabric-softener.jpeg.asset.json";
-import highChair from "@/assets/wishlist/high-chair.jpeg.asset.json";
-import tableware from "@/assets/wishlist/tableware.jpeg.asset.json";
-import bottleCleanser from "@/assets/wishlist/bottle-cleanser.jpeg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -49,24 +38,8 @@ const details = [
   },
 ];
 
-const wishlist = [
-  { name: "Storybook collection", image: storybooks.url },
-  { name: "Graded reading books set", image: readingBooks.url },
-  { name: "Baby food processor", image: foodProcessor.url },
-  { name: "Diapers (size M)", image: diapers.url },
-  { name: "Baby laundry detergent", image: laundryDetergent.url },
-  { name: "Baby fabric softener", image: fabricSoftener.url },
-  { name: "Convertible high chair", image: highChair.url },
-  { name: "Baby tableware set", image: tableware.url },
-  { name: "Bottle & nipple cleanser", image: bottleCleanser.url },
-  { name: "Feeding bottles (240ml)", image: feedingBottles.url },
-  { name: "Diaper bag backpack", image: diaperBag.url },
-];
-
-type WishlistItem = (typeof wishlist)[number];
-
 function Index() {
-  const [active, setActive] = useState<WishlistItem | null>(null);
+
 
   return (
 
@@ -132,63 +105,12 @@ function Index() {
           <div className="text-center">
             <h2 className="font-script text-5xl">AZ's Wishlist</h2>
             <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
-              Your presence is the greatest gift. But if you'd like to spoil our little one, here are a
-              few things she'd love.
+              Your presence is the greatest gift. But if you'd like to spoil our little one, tap a
+              gift to reserve it — reserved gifts are marked so no one doubles up.
             </p>
           </div>
-          <ul className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-3">
-            {wishlist.map((item) => (
-              <li
-                key={item.name}
-                className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm"
-              >
-                <button
-                  type="button"
-                  onClick={() => setActive(item)}
-                  className="block w-full cursor-zoom-in transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  aria-label={`View ${item.name} larger`}
-                >
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    loading="lazy"
-                    className="aspect-square w-full bg-background object-contain"
-                  />
-                </button>
-                <p className="px-4 py-4 text-center text-sm text-muted-foreground">{item.name}</p>
-              </li>
-            ))}
-          </ul>
+          <Wishlist />
 
-          {active && (
-            <div
-              role="dialog"
-              aria-modal="true"
-              aria-label={active.name}
-              onClick={() => setActive(null)}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/70 p-6 backdrop-blur-sm"
-            >
-              <div
-                className="relative max-h-full w-full max-w-2xl overflow-hidden rounded-3xl border border-border bg-card"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  type="button"
-                  onClick={() => setActive(null)}
-                  aria-label="Close"
-                  className="absolute right-4 top-4 rounded-full bg-background/80 px-3 py-1 text-sm text-foreground shadow-sm"
-                >
-                  Close
-                </button>
-                <img
-                  src={active.image}
-                  alt={active.name}
-                  className="max-h-[70vh] w-full bg-background object-contain"
-                />
-                <p className="px-6 py-4 text-center font-display text-lg">{active.name}</p>
-              </div>
-            </div>
-          )}
 
         </div>
       </section>
