@@ -38,24 +38,8 @@ const details = [
   },
 ];
 
-const wishlist = [
-  { name: "Storybook collection", image: storybooks.url },
-  { name: "Graded reading books set", image: readingBooks.url },
-  { name: "Baby food processor", image: foodProcessor.url },
-  { name: "Diapers (size M)", image: diapers.url },
-  { name: "Baby laundry detergent", image: laundryDetergent.url },
-  { name: "Baby fabric softener", image: fabricSoftener.url },
-  { name: "Convertible high chair", image: highChair.url },
-  { name: "Baby tableware set", image: tableware.url },
-  { name: "Bottle & nipple cleanser", image: bottleCleanser.url },
-  { name: "Feeding bottles (240ml)", image: feedingBottles.url },
-  { name: "Diaper bag backpack", image: diaperBag.url },
-];
-
-type WishlistItem = (typeof wishlist)[number];
-
 function Index() {
-  const [active, setActive] = useState<WishlistItem | null>(null);
+
 
   return (
 
