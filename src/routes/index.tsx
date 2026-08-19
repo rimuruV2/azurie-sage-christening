@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { RsvpForm } from "@/components/RsvpForm";
+import { PhotoSlideshow } from "@/components/PhotoSlideshow";
 import feedingBottles from "@/assets/wishlist/feeding-bottles.jpeg.asset.json";
 import diaperBag from "@/assets/wishlist/diaper-bag.jpeg.asset.json";
 
@@ -109,6 +110,20 @@ function Index() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section id="pictures" className="px-6 pb-24">
+        <div className="mx-auto max-w-3xl">
+          <div className="text-center">
+            <h2 className="font-script text-5xl">AZ's Pictures</h2>
+            <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
+              A few of our favourite moments with our little sunshine.
+            </p>
+          </div>
+          <div className="mt-10">
+            <PhotoSlideshow />
+          </div>
         </div>
       </section>
 
