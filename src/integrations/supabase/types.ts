@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      gallery_photos: {
+        Row: {
+          caption: string | null
+          created_at: string
+          id: string
+          image_url: string
+          sort_order: number
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url: string
+          sort_order?: number
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
       rsvps: {
         Row: {
           attending: boolean
@@ -59,6 +83,36 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      wishlist_items: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          name: string
+          reserved_at: string | null
+          reserved_by_name: string | null
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url: string
+          name: string
+          reserved_at?: string | null
+          reserved_by_name?: string | null
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          name?: string
+          reserved_at?: string | null
+          reserved_by_name?: string | null
+          sort_order?: number
         }
         Relationships: []
       }
