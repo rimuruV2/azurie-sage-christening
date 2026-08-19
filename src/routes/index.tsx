@@ -44,6 +44,18 @@ const details = [
   },
 ];
 
+const wishlist = [
+  { name: "Storybook collection", image: storybooks.url },
+  { name: "Graded reading books set", image: readingBooks.url },
+  { name: "Baby food processor", image: foodProcessor.url },
+  { name: "Diapers (size M)", image: diapers.url },
+  { name: "Baby laundry detergent", image: laundryDetergent.url },
+  { name: "Baby fabric softener", image: fabricSoftener.url },
+  { name: "Convertible high chair", image: highChair.url },
+  { name: "Baby tableware set", image: tableware.url },
+  { name: "Bottle & nipple cleanser", image: bottleCleanser.url },
+];
+
 function Index() {
   return (
     <main className="min-h-screen bg-background text-foreground">
