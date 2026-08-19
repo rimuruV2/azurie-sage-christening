@@ -1,19 +1,8 @@
-import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { RsvpForm } from "@/components/RsvpForm";
 import { PhotoSlideshow } from "@/components/PhotoSlideshow";
-import feedingBottles from "@/assets/wishlist/feeding-bottles.jpeg.asset.json";
-import diaperBag from "@/assets/wishlist/diaper-bag.jpeg.asset.json";
+import { Wishlist } from "@/components/Wishlist";
 
-import storybooks from "@/assets/wishlist/storybooks.jpeg.asset.json";
-import readingBooks from "@/assets/wishlist/reading-books.jpeg.asset.json";
-import foodProcessor from "@/assets/wishlist/food-processor.jpeg.asset.json";
-import diapers from "@/assets/wishlist/diapers.jpeg.asset.json";
-import laundryDetergent from "@/assets/wishlist/laundry-detergent.jpeg.asset.json";
-import fabricSoftener from "@/assets/wishlist/fabric-softener.jpeg.asset.json";
-import highChair from "@/assets/wishlist/high-chair.jpeg.asset.json";
-import tableware from "@/assets/wishlist/tableware.jpeg.asset.json";
-import bottleCleanser from "@/assets/wishlist/bottle-cleanser.jpeg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
