@@ -54,10 +54,17 @@ const wishlist = [
   { name: "Convertible high chair", image: highChair.url },
   { name: "Baby tableware set", image: tableware.url },
   { name: "Bottle & nipple cleanser", image: bottleCleanser.url },
+  { name: "Feeding bottles (240ml)", image: feedingBottles.url },
+  { name: "Diaper bag backpack", image: diaperBag.url },
 ];
 
+type WishlistItem = (typeof wishlist)[number];
+
 function Index() {
+  const [active, setActive] = useState<WishlistItem | null>(null);
+
   return (
+
     <main className="min-h-screen bg-background text-foreground">
       <section className="relative overflow-hidden px-6 py-24 text-center sm:py-32">
         <div
