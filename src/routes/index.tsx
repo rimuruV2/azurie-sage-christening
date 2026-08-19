@@ -112,6 +112,20 @@ function Index() {
         </div>
       </section>
 
+      <section id="pictures" className="px-6 pb-24">
+        <div className="mx-auto max-w-3xl">
+          <div className="text-center">
+            <h2 className="font-script text-5xl">AZ's Pictures</h2>
+            <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
+              A few of our favourite moments with our little sunshine.
+            </p>
+          </div>
+          <div className="mt-10">
+            <PhotoSlideshow />
+          </div>
+        </div>
+      </section>
+
       <section id="wishlist" className="px-6 pb-24">
         <div className="mx-auto max-w-5xl">
           <div className="text-center">
