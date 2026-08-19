@@ -1,5 +1,9 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { RsvpForm } from "@/components/RsvpForm";
+import feedingBottles from "@/assets/wishlist/feeding-bottles.jpeg.asset.json";
+import diaperBag from "@/assets/wishlist/diaper-bag.jpeg.asset.json";
+
 import storybooks from "@/assets/wishlist/storybooks.jpeg.asset.json";
 import readingBooks from "@/assets/wishlist/reading-books.jpeg.asset.json";
 import foodProcessor from "@/assets/wishlist/food-processor.jpeg.asset.json";
