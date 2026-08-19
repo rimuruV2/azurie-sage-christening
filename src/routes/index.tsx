@@ -101,6 +101,35 @@ function Index() {
         </div>
       </section>
 
+      <section id="wishlist" className="px-6 pb-24">
+        <div className="mx-auto max-w-5xl">
+          <div className="text-center">
+            <h2 className="font-script text-5xl">AZ's Wishlist</h2>
+            <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
+              Your presence is the greatest gift. But if you'd like to spoil our little one, here are a
+              few things she'd love.
+            </p>
+          </div>
+          <ul className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-3">
+            {wishlist.map((item) => (
+              <li
+                key={item.name}
+                className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm"
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  loading="lazy"
+                  className="aspect-square w-full bg-background object-contain"
+                />
+                <p className="px-4 py-4 text-center text-sm text-muted-foreground">{item.name}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+
       <section id="rsvp" className="bg-secondary/30 px-6 py-24">
         <div className="mx-auto max-w-xl">
           <div className="text-center">
