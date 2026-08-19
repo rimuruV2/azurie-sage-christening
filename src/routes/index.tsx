@@ -1,5 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { RsvpForm } from "@/components/RsvpForm";
+import storybooks from "@/assets/wishlist/storybooks.jpeg.asset.json";
+import readingBooks from "@/assets/wishlist/reading-books.jpeg.asset.json";
+import foodProcessor from "@/assets/wishlist/food-processor.jpeg.asset.json";
+import diapers from "@/assets/wishlist/diapers.jpeg.asset.json";
+import laundryDetergent from "@/assets/wishlist/laundry-detergent.jpeg.asset.json";
+import fabricSoftener from "@/assets/wishlist/fabric-softener.jpeg.asset.json";
+import highChair from "@/assets/wishlist/high-chair.jpeg.asset.json";
+import tableware from "@/assets/wishlist/tableware.jpeg.asset.json";
+import bottleCleanser from "@/assets/wishlist/bottle-cleanser.jpeg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -33,6 +42,18 @@ const details = [
     label: "Attire",
     lines: ["Casual pink for guests", "White for ninong and ninang", "Come comfortable"],
   },
+];
+
+const wishlist = [
+  { name: "Storybook collection", image: storybooks.url },
+  { name: "Graded reading books set", image: readingBooks.url },
+  { name: "Baby food processor", image: foodProcessor.url },
+  { name: "Diapers (size M)", image: diapers.url },
+  { name: "Baby laundry detergent", image: laundryDetergent.url },
+  { name: "Baby fabric softener", image: fabricSoftener.url },
+  { name: "Convertible high chair", image: highChair.url },
+  { name: "Baby tableware set", image: tableware.url },
+  { name: "Bottle & nipple cleanser", image: bottleCleanser.url },
 ];
 
 function Index() {
@@ -79,6 +100,35 @@ function Index() {
           ))}
         </div>
       </section>
+
+      <section id="wishlist" className="px-6 pb-24">
+        <div className="mx-auto max-w-5xl">
+          <div className="text-center">
+            <h2 className="font-script text-5xl">AZ's Wishlist</h2>
+            <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
+              Your presence is the greatest gift. But if you'd like to spoil our little one, here are a
+              few things she'd love.
+            </p>
+          </div>
+          <ul className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-3">
+            {wishlist.map((item) => (
+              <li
+                key={item.name}
+                className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm"
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  loading="lazy"
+                  className="aspect-square w-full bg-background object-contain"
+                />
+                <p className="px-4 py-4 text-center text-sm text-muted-foreground">{item.name}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
 
       <section id="rsvp" className="bg-secondary/30 px-6 py-24">
         <div className="mx-auto max-w-xl">
