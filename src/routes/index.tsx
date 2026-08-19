@@ -1,7 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { RsvpForm } from "@/components/RsvpForm";
 import { PhotoSlideshow } from "@/components/PhotoSlideshow";
-import { Wishlist } from "@/components/Wishlist";
 
 
 export const Route = createFileRoute("/")({
@@ -101,17 +100,18 @@ function Index() {
       </section>
 
       <section id="wishlist" className="px-6 pb-24">
-        <div className="mx-auto max-w-5xl">
-          <div className="text-center">
-            <h2 className="font-script text-5xl">AZ's Wishlist</h2>
-            <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
-              Your presence is the greatest gift. But if you'd like to spoil our little one, tap a
-              gift to reserve it — reserved gifts are marked so no one doubles up.
-            </p>
-          </div>
-          <Wishlist />
-
-
+        <div className="mx-auto max-w-3xl rounded-3xl border border-border bg-card p-10 text-center shadow-sm">
+          <h2 className="font-script text-5xl">AZ's Wishlist</h2>
+          <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
+            Your presence is the greatest gift. But if you'd like to spoil our little one, you can
+            reserve a gift or send a monetary gift.
+          </p>
+          <Link
+            to="/wishlist"
+            className="mt-8 inline-flex rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
+          >
+            View the wishlist
+          </Link>
         </div>
       </section>
 
