@@ -46,12 +46,12 @@ const stars: Star[] = [
 
 export function StarField() {
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+    <div aria-hidden className="pointer-events-none fixed inset-0 z-40 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-pink/20 via-transparent to-pink/10" />
       {stars.map((star, i) => (
         <svg
           key={i}
-          className={`absolute text-gold animate-twinkle ${star.size}`}
+          className={`absolute text-gold animate-twinkle drop-shadow-[0_0_4px_rgba(212,175,55,0.8)] ${star.size}`}
           style={{
             top: star.top,
             left: star.left,
