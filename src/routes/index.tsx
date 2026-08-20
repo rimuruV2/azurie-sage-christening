@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { RsvpForm } from "@/components/RsvpForm";
 import { PhotoSlideshow } from "@/components/PhotoSlideshow";
+import { CountdownTimer } from "@/components/CountdownTimer";
+
 
 
 export const Route = createFileRoute("/")({
