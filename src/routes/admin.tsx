@@ -270,3 +270,72 @@ function GuestList({ email }: { email: string }) {
     </div>
   );
 }
+
+function NewPasswordCard() {
+  const [open, setOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [pending, setPending] = useState(false);
+
+  async function save(event: React.FormEvent) {
+    event.preventDefault();
+    setPending(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+      toast.success("Password updated.");
+      setNewPassword("");
+      setOpen(false);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not update password");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  if (!open) {
+    return (
+      <div className="text-center">
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="text-xs text-muted-foreground underline underline-offset-4"
+        >
+          Set a new password
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={save}
+      className="mx-auto max-w-sm space-y-4 rounded-3xl border border-border bg-card p-6 shadow-sm"
+    >
+      <div className="space-y-2">
+        <Label htmlFor="new-password">New password</Label>
+        <Input
+          id="new-password"
+          type="password"
+          minLength={6}
+          value={newPassword}
+          autoComplete="new-password"
+          onChange={(e) => setNewPassword(e.target.value)}
+          required
+        />
+      </div>
+      <div className="flex gap-2">
+        <Button type="submit" disabled={pending} className="flex-1 rounded-full">
+          {pending ? "Saving…" : "Save password"}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="rounded-full"
+          onClick={() => setOpen(false)}
+        >
+          Cancel
+        </Button>
+      </div>
+    </form>
+  );
+}
