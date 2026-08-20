@@ -5,7 +5,7 @@ export function NavBar() {
   const onHome = pathname === "/";
 
   const linkClass =
-    "rounded-full px-3 py-1.5 font-display text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground";
+    "rounded-full px-3 py-1.5 font-display text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground";
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
