@@ -46,8 +46,9 @@ const stars: Star[] = [
 
 export function StarField() {
   return (
+    <>
+    <div aria-hidden className="pointer-events-none fixed inset-0 z-0 bg-gradient-to-b from-pink/20 via-transparent to-pink/10" />
     <div aria-hidden className="pointer-events-none fixed inset-0 z-40 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-pink/20 via-transparent to-pink/10" />
       {stars.map((star, i) => (
         <svg
           key={i}
