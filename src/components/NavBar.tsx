@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function NavBar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -39,6 +40,7 @@ export function NavBar() {
               RSVP
             </Link>
           )}
+          <ThemeToggle />
         </div>
       </nav>
     </header>
