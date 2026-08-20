@@ -165,6 +165,17 @@ function AuthCard() {
       >
         {mode === "signin" ? "Need to create the host account?" : "Already have an account? Sign in"}
       </button>
+      {mode === "signin" && (
+        <button
+          type="button"
+          onClick={handleReset}
+          disabled={pending}
+          className="w-full text-center text-xs text-muted-foreground underline underline-offset-4"
+        >
+          Forgot password? Email me a reset link
+        </button>
+      )}
+
     </form>
   );
 }
