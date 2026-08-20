@@ -79,7 +79,7 @@ export function Wishlist() {
                 <p className="text-sm text-muted-foreground">{item.name}</p>
                 {reserved ? (
                   <p className="mt-1 text-xs uppercase tracking-[0.2em] text-muted-foreground/70">
-                    Reserved by {item.reserved_by_name}
+                    Reserved
                   </p>
                 ) : (
                   <p className="mt-1 text-xs uppercase tracking-[0.2em] text-primary">Available</p>
