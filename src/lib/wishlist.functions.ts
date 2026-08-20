@@ -20,8 +20,41 @@ function publicClient() {
   });
 }
 
+const STORAGE_PREFIX = "storage:";
+
+/** Uploaded images are stored as "storage:<path>"; swap them for temporary view links. */
+async function resolveImages<T extends { image_url: string }>(
+  client: ReturnType<typeof publicClient>,
+  rows: T[],
+): Promise<T[]> {
+  const paths = rows
+    .map((row) => row.image_url)
+    .filter((url) => url.startsWith(STORAGE_PREFIX))
+    .map((url) => url.slice(STORAGE_PREFIX.length));
+
+  if (paths.length === 0) return rows;
+
+  const { data, error } = await client.storage.from("az-media").createSignedUrls(paths, 60 * 60 * 24 * 7);
+  if (error) {
+    console.error("Signing uploaded images failed", error.message);
+    return rows;
+  }
+
+  const signed = new Map<string, string>();
+  data?.forEach((entry) => {
+    if (entry.path && entry.signedUrl) signed.set(entry.path, entry.signedUrl);
+  });
+
+  return rows.map((row) =>
+    row.image_url.startsWith(STORAGE_PREFIX)
+      ? { ...row, image_url: signed.get(row.image_url.slice(STORAGE_PREFIX.length)) ?? row.image_url }
+      : row,
+  );
+}
+
 export const listWishlist = createServerFn({ method: "GET" }).handler(async () => {
-  const { data, error } = await publicClient()
+  const client = publicClient();
+  const { data, error } = await client
     .from("wishlist_items")
     .select("id, name, image_url, reserved_by_name, sort_order")
     .order("sort_order", { ascending: true });
@@ -31,11 +64,12 @@ export const listWishlist = createServerFn({ method: "GET" }).handler(async () =
     throw new Error("Could not load the wishlist.");
   }
 
-  return data ?? [];
+  return resolveImages(client, data ?? []);
 });
 
 export const listGalleryPhotos = createServerFn({ method: "GET" }).handler(async () => {
-  const { data, error } = await publicClient()
+  const client = publicClient();
+  const { data, error } = await client
     .from("gallery_photos")
     .select("id, image_url, caption, sort_order")
     .order("sort_order", { ascending: true });
@@ -45,7 +79,7 @@ export const listGalleryPhotos = createServerFn({ method: "GET" }).handler(async
     throw new Error("Could not load the photos.");
   }
 
-  return data ?? [];
+  return resolveImages(client, data ?? []);
 });
 
 const reserveSchema = z.object({
