@@ -37,7 +37,7 @@ function WishlistPage() {
           <p className="text-xs uppercase tracking-[0.35em] text-muted-foreground">
             With hearts full of gratitude
           </p>
-          <h1 className="mt-6 font-script text-5xl sm:text-6xl">AZ's Wishlist</h1>
+          <h1 className="mt-6 font-display text-5xl font-bold sm:text-6xl">AZ's Wishlist</h1>
           <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
             Your presence is the greatest gift. But if you'd like to spoil our little one, tap a
             gift to reserve it — reserved gifts are marked so no one doubles up.
@@ -51,7 +51,7 @@ function WishlistPage() {
       <section id="monetary" className="bg-secondary/30 px-6 py-20">
         <div className="mx-auto max-w-5xl">
           <div className="text-center">
-            <h2 className="font-script text-5xl">Monetary Gifts</h2>
+            <h2 className="font-display text-5xl font-bold">Monetary Gifts</h2>
             <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
               If you prefer to give a monetary gift, you may scan any of the QR codes below. All
               accounts are under the name <span className="text-foreground">Angielyn Alonzo</span>.
