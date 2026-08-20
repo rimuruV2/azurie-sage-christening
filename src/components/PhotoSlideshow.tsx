@@ -13,13 +13,43 @@ export function PhotoSlideshow() {
 
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [transitionEnabled, setTransitionEnabled] = useState(true);
   const count = photos.length;
 
-  const go = (step: number) => setIndex((i) => (count ? (i + step + count) % count : 0));
+  useEffect(() => {
+    if (count) setIndex(count);
+  }, [count]);
+
+  const go = (step: number) => {
+    if (!count) return;
+    setTransitionEnabled(true);
+    setIndex((i) => i + step);
+  };
+
+  useEffect(() => {
+    if (!count) return;
+    if (index >= count * 2) {
+      setTransitionEnabled(false);
+      setIndex((i) => i - count);
+    } else if (index < count) {
+      setTransitionEnabled(false);
+      setIndex((i) => i + count);
+    }
+  }, [index, count]);
+
+  useEffect(() => {
+    if (!transitionEnabled) {
+      const r = requestAnimationFrame(() => setTransitionEnabled(true));
+      return () => cancelAnimationFrame(r);
+    }
+  }, [transitionEnabled]);
 
   useEffect(() => {
     if (paused || count <= 3) return;
-    const timer = setInterval(() => setIndex((i) => (i + 1) % count), 3000);
+    const timer = setInterval(() => {
+      setTransitionEnabled(true);
+      setIndex((i) => i + 1);
+    }, 3000);
     return () => clearInterval(timer);
   }, [paused, count]);
 
@@ -37,6 +67,9 @@ export function PhotoSlideshow() {
     return <p className="text-center text-sm text-muted-foreground">Photos coming soon.</p>;
   }
 
+  const displayPhotos = [...photos, ...photos, ...photos];
+  const activeDot = index % count;
+
   return (
     <div
       className="mx-auto max-w-5xl"
@@ -46,10 +79,10 @@ export function PhotoSlideshow() {
       <div className="relative">
         <div className="overflow-hidden rounded-3xl">
           <div
-            className="flex transition-transform duration-700 ease-out"
+            className={`flex ${transitionEnabled ? "transition-transform duration-700 ease-out" : ""}`}
             style={{ transform: `translateX(-${index * (100 / 3)}%)` }}
           >
-            {[...photos, ...photos].map((photo, i) => (
+            {displayPhotos.map((photo, i) => (
               <figure
                 key={`${photo.id}-${i}`}
                 className="w-1/3 shrink-0 px-1.5"
@@ -95,11 +128,14 @@ export function PhotoSlideshow() {
           <button
             key={photo.id}
             type="button"
-            onClick={() => setIndex(i)}
+            onClick={() => {
+              setTransitionEnabled(true);
+              setIndex(count + i);
+            }}
             aria-label={`Go to photo ${i + 1}`}
-            aria-current={i === index}
+            aria-current={i === activeDot}
             className={`h-2 rounded-full transition-all ${
-              i === index ? "w-6 bg-primary" : "w-2 bg-border hover:bg-muted-foreground/40"
+              i === activeDot ? "w-6 bg-primary" : "w-2 bg-border hover:bg-muted-foreground/40"
             }`}
           />
         ))}
