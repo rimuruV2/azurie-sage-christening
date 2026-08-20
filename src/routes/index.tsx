@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { RsvpForm } from "@/components/RsvpForm";
 import { PhotoSlideshow } from "@/components/PhotoSlideshow";
+import { CountdownTimer } from "@/components/CountdownTimer";
+
 
 
 export const Route = createFileRoute("/")({
@@ -73,6 +75,7 @@ function Index() {
             We invite you to join us as our little one receives the sacrament of baptism, and to stay
             afterwards for a warm celebration with family and friends.
           </p>
+          <CountdownTimer />
         </div>
       </section>
 
@@ -83,7 +86,7 @@ function Index() {
               key={item.label}
               className="rounded-3xl border border-border bg-card p-8 text-center shadow-sm"
             >
-              <h2 className="font-display text-xl">{item.label}</h2>
+              <h2 className="font-display text-xl font-bold">{item.label}</h2>
               <div className="mt-4 space-y-1.5 text-sm text-muted-foreground">
                 {item.lines.map((line) => (
                   <p key={line}>{line}</p>
