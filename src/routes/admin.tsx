@@ -78,7 +78,6 @@ function AdminPage() {
 }
 
 function AuthCard() {
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
@@ -88,21 +87,11 @@ function AuthCard() {
     setPending(true);
     const cleanEmail = email.trim().toLowerCase();
     try {
-      if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: cleanEmail,
-          password,
-        });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email: cleanEmail,
-          password,
-          options: { emailRedirectTo: `${window.location.origin}/admin` },
-        });
-        if (error) throw error;
-        toast.success("Account created. Check your inbox if confirmation is required.");
-      }
+      const { error } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password,
+      });
+      if (error) throw error;
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Sign in failed");
     } finally {
@@ -130,15 +119,12 @@ function AuthCard() {
     }
   }
 
-
   return (
     <form
       onSubmit={handleSubmit}
       className="mx-auto max-w-sm space-y-5 rounded-3xl border border-border bg-card p-8 shadow-sm"
     >
-      <h2 className="text-center font-display text-2xl">
-        {mode === "signin" ? "Sign in" : "Create host account"}
-      </h2>
+      <h2 className="text-center font-display text-2xl">Sign in</h2>
       <div className="space-y-2">
         <Label htmlFor="admin-email">Email</Label>
         <Input
@@ -157,32 +143,22 @@ function AuthCard() {
           type="password"
           value={password}
           minLength={6}
-          autoComplete={mode === "signin" ? "current-password" : "new-password"}
+          autoComplete="current-password"
           onChange={(e) => setPassword(e.target.value)}
           required
         />
       </div>
       <Button type="submit" disabled={pending} className="w-full rounded-full">
-        {pending ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
+        {pending ? "Please wait…" : "Sign in"}
       </Button>
       <button
         type="button"
-        onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+        onClick={handleReset}
+        disabled={pending}
         className="w-full text-center text-xs text-muted-foreground underline underline-offset-4"
       >
-        {mode === "signin" ? "Need to create the host account?" : "Already have an account? Sign in"}
+        Forgot password? Email me a reset link
       </button>
-      {mode === "signin" && (
-        <button
-          type="button"
-          onClick={handleReset}
-          disabled={pending}
-          className="w-full text-center text-xs text-muted-foreground underline underline-offset-4"
-        >
-          Forgot password? Email me a reset link
-        </button>
-      )}
-
     </form>
   );
 }
