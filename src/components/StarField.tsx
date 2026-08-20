@@ -66,5 +66,6 @@ export function StarField() {
         </svg>
       ))}
     </div>
+    </>
   );
 }
