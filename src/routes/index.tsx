@@ -25,11 +25,20 @@ export const Route = createFileRoute("/")({
 const details = [
   {
     label: "The Christening",
-    lines: ["Saturday, October 3, 2026", "11:00 in the morning", "Our Lady of the Holy Rosary Parish"],
+    lines: [
+      "Saturday, October 3, 2026",
+      "11:00 in the morning",
+      "Our Lady of the Holy Rosary Parish",
+      "434 M. L. Quezon Ave, Lower Bicutan, Taguig, 1630 Metro Manila",
+    ],
   },
   {
     label: "The Reception",
-    lines: ["12:00 NN - 2:00 PM", "Jollibee Lower Bicutan"],
+    lines: [
+      "12:00 NN - 2:00 PM",
+      "Jollibee General Santos Ave",
+      "F3Q6+4VG, Level 1, General Santos Ave, Lower Bicutan, Taguig, 1632 Metro Manila",
+    ],
   },
   {
     label: "Attire",
@@ -88,7 +97,7 @@ function Index() {
       <section id="pictures" className="px-6 pb-24">
         <div className="mx-auto max-w-3xl">
           <div className="text-center">
-            <h2 className="font-script text-5xl">AZ's Pictures</h2>
+            <h2 className="font-display text-5xl font-bold">AZ's Pictures</h2>
             <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
               A few of our favourite moments with our little sunshine.
             </p>
@@ -101,7 +110,7 @@ function Index() {
 
       <section id="wishlist" className="px-6 pb-24">
         <div className="mx-auto max-w-3xl rounded-3xl border border-border bg-card p-10 text-center shadow-sm">
-          <h2 className="font-script text-5xl">AZ's Wishlist</h2>
+          <h2 className="font-display text-5xl font-bold">AZ's Wishlist</h2>
           <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
             Your presence is the greatest gift. But if you'd like to spoil our little one, you can
             reserve a gift or send a monetary gift.
