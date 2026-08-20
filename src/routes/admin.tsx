@@ -56,7 +56,13 @@ function AdminPage() {
           {checking ? (
             <p className="text-center text-sm text-muted-foreground">Loading…</p>
           ) : userEmail ? (
-            <GuestList email={userEmail} />
+            <>
+              <NewPasswordCard />
+              <div className="mt-8">
+                <GuestList email={userEmail} />
+              </div>
+            </>
+
           ) : (
             <AuthCard />
           )}
@@ -80,13 +86,17 @@ function AuthCard() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setPending(true);
+    const cleanEmail = email.trim().toLowerCase();
     try {
       if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password,
+        });
         if (error) throw error;
       } else {
         const { error } = await supabase.auth.signUp({
-          email,
+          email: cleanEmail,
           password,
           options: { emailRedirectTo: `${window.location.origin}/admin` },
         });
@@ -99,6 +109,27 @@ function AuthCard() {
       setPending(false);
     }
   }
+
+  async function handleReset() {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail) {
+      toast.error("Enter your email first, then tap reset.");
+      return;
+    }
+    setPending(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
+        redirectTo: `${window.location.origin}/admin`,
+      });
+      if (error) throw error;
+      toast.success("Password reset link sent. Check your inbox.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not send reset link");
+    } finally {
+      setPending(false);
+    }
+  }
+
 
   return (
     <form
@@ -141,6 +172,17 @@ function AuthCard() {
       >
         {mode === "signin" ? "Need to create the host account?" : "Already have an account? Sign in"}
       </button>
+      {mode === "signin" && (
+        <button
+          type="button"
+          onClick={handleReset}
+          disabled={pending}
+          className="w-full text-center text-xs text-muted-foreground underline underline-offset-4"
+        >
+          Forgot password? Email me a reset link
+        </button>
+      )}
+
     </form>
   );
 }
@@ -229,5 +271,74 @@ function GuestList({ email }: { email: string }) {
 
       <AdminMedia />
     </div>
+  );
+}
+
+function NewPasswordCard() {
+  const [open, setOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [pending, setPending] = useState(false);
+
+  async function save(event: React.FormEvent) {
+    event.preventDefault();
+    setPending(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+      toast.success("Password updated.");
+      setNewPassword("");
+      setOpen(false);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not update password");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  if (!open) {
+    return (
+      <div className="text-center">
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="text-xs text-muted-foreground underline underline-offset-4"
+        >
+          Set a new password
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={save}
+      className="mx-auto max-w-sm space-y-4 rounded-3xl border border-border bg-card p-6 shadow-sm"
+    >
+      <div className="space-y-2">
+        <Label htmlFor="new-password">New password</Label>
+        <Input
+          id="new-password"
+          type="password"
+          minLength={6}
+          value={newPassword}
+          autoComplete="new-password"
+          onChange={(e) => setNewPassword(e.target.value)}
+          required
+        />
+      </div>
+      <div className="flex gap-2">
+        <Button type="submit" disabled={pending} className="flex-1 rounded-full">
+          {pending ? "Saving…" : "Save password"}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="rounded-full"
+          onClick={() => setOpen(false)}
+        >
+          Cancel
+        </Button>
+      </div>
+    </form>
   );
 }
