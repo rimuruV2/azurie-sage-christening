@@ -19,7 +19,7 @@ async function uploadFile(file: File, folder: "wishlist" | "gallery") {
   const path = `${folder}/${crypto.randomUUID()}.${ext}`;
   const { error } = await supabase.storage.from("az-media").upload(path, file, {
     cacheControl: "3600",
-    contentType: file.type || undefined,
+    contentType: file.type || "image/jpeg",
   });
   if (error) throw new Error(error.message);
   return path;
@@ -60,8 +60,14 @@ function WishlistManager() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     const file = fileRef.current?.files?.[0];
-    if (!file) return toast.error("Please choose a photo.");
-    if (name.trim().length < 2) return toast.error("Please enter a gift name.");
+    if (!file) {
+      toast.error("Please choose a photo.");
+      return;
+    }
+    if (name.trim().length < 2) {
+      toast.error("Please enter a gift name.");
+      return;
+    }
     setBusy(true);
     try {
       const path = await uploadFile(file, "wishlist");
@@ -144,7 +150,10 @@ function GalleryManager() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     const files = Array.from(fileRef.current?.files ?? []);
-    if (files.length === 0) return toast.error("Please choose at least one photo.");
+    if (files.length === 0) {
+      toast.error("Please choose at least one photo.");
+      return;
+    }
     setBusy(true);
     try {
       for (const file of files) {
