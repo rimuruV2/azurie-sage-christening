@@ -18,12 +18,14 @@ export function PhotoSlideshow() {
 
   useEffect(() => {
     if (count) setIndex(count);
+    return;
   }, [count]);
 
   const go = (step: number) => {
     if (!count) return;
     setTransitionEnabled(true);
     setIndex((i) => i + step);
+    return;
   };
 
   useEffect(() => {
@@ -35,6 +37,7 @@ export function PhotoSlideshow() {
       setTransitionEnabled(false);
       setIndex((i) => i + count);
     }
+    return;
   }, [index, count]);
 
   useEffect(() => {
@@ -42,6 +45,7 @@ export function PhotoSlideshow() {
       const r = requestAnimationFrame(() => setTransitionEnabled(true));
       return () => cancelAnimationFrame(r);
     }
+    return;
   }, [transitionEnabled]);
 
   useEffect(() => {
@@ -131,6 +135,7 @@ export function PhotoSlideshow() {
             onClick={() => {
               setTransitionEnabled(true);
               setIndex(count + i);
+              return;
             }}
             aria-label={`Go to photo ${i + 1}`}
             aria-current={i === activeDot}
