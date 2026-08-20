@@ -73,7 +73,7 @@ function Index() {
           </div>
           <p className="mt-8 text-base leading-relaxed text-muted-foreground">
             We invite you to join us as our little one receives the sacrament of baptism, and to stay
-            afterwards for a warm celebration with family and friends.
+            afterwards for a simple celebration with family and friends.
           </p>
           <CountdownTimer />
         </div>
