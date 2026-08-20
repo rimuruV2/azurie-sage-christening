@@ -55,7 +55,13 @@ function AdminPage() {
           {checking ? (
             <p className="text-center text-sm text-muted-foreground">Loading…</p>
           ) : userEmail ? (
-            <GuestList email={userEmail} />
+            <>
+              <NewPasswordCard />
+              <div className="mt-8">
+                <GuestList email={userEmail} />
+              </div>
+            </>
+
           ) : (
             <AuthCard />
           )}
