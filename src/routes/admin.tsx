@@ -8,6 +8,7 @@ import { listRsvps } from "@/lib/rsvp.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AdminMedia } from "@/components/AdminMedia";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
@@ -225,6 +226,8 @@ function GuestList({ email }: { email: string }) {
           </tbody>
         </table>
       </div>
+
+      <AdminMedia />
     </div>
   );
 }
