@@ -79,13 +79,17 @@ function AuthCard() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setPending(true);
+    const cleanEmail = email.trim().toLowerCase();
     try {
       if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password,
+        });
         if (error) throw error;
       } else {
         const { error } = await supabase.auth.signUp({
-          email,
+          email: cleanEmail,
           password,
           options: { emailRedirectTo: `${window.location.origin}/admin` },
         });
@@ -98,6 +102,27 @@ function AuthCard() {
       setPending(false);
     }
   }
+
+  async function handleReset() {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail) {
+      toast.error("Enter your email first, then tap reset.");
+      return;
+    }
+    setPending(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
+        redirectTo: `${window.location.origin}/admin`,
+      });
+      if (error) throw error;
+      toast.success("Password reset link sent. Check your inbox.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not send reset link");
+    } finally {
+      setPending(false);
+    }
+  }
+
 
   return (
     <form
