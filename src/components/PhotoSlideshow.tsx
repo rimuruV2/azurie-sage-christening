@@ -150,6 +150,39 @@ export function PhotoSlideshow() {
           />
         ))}
       </div>
+
+      {selectedPhoto && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 p-4 backdrop-blur-sm"
+          onClick={() => setSelectedPhoto(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            type="button"
+            onClick={() => setSelectedPhoto(null)}
+            aria-label="Close photo"
+            className="absolute right-4 top-4 rounded-full bg-background/90 p-2 text-foreground shadow-sm transition hover:bg-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          <figure
+            className="max-h-[85vh] max-w-5xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={selectedPhoto.image_url}
+              alt={selectedPhoto.caption ?? "Baby Azurie Sage"}
+              className="max-h-[80vh] w-auto rounded-3xl border border-border bg-card object-contain shadow-[0_0_50px_-10px_var(--gold)]"
+            />
+            {selectedPhoto.caption && (
+              <figcaption className="mt-4 text-center text-sm text-muted-foreground">
+                {selectedPhoto.caption}
+              </figcaption>
+            )}
+          </figure>
+        </div>
+      )}
     </div>
   );
 }
