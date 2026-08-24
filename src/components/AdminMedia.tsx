@@ -57,6 +57,28 @@ function WishlistManager() {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const setQuantity = useServerFn(setWishlistQuantity);
+  const setReservations = useServerFn(setWishlistReservations);
+
+  const updateQuantity = useMutation({
+    mutationFn: (input: { id: string; quantity: number }) => setQuantity({ data: input }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wishlist_items"] });
+      toast.success("Quantity updated.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const updateReservations = useMutation({
+    mutationFn: (input: { id: string; reserved_count: number }) => setReservations({ data: input }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wishlist_items"] });
+      toast.success("Reservations updated.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     const file = fileRef.current?.files?.[0];
