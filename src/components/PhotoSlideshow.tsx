@@ -14,6 +14,7 @@ export function PhotoSlideshow() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
+  const [selectedPhoto, setSelectedPhoto] = useState<null | { image_url: string; caption: string | null }>(null);
   const count = photos.length;
 
   useEffect(() => {
