@@ -91,7 +91,7 @@ export function PhotoSlideshow() {
                 key={`${photo.id}-${i}`}
                 className="w-1/3 shrink-0 px-1.5"
               >
-                <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
+                <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[0_0_28px_-6px_var(--gold)] transition-shadow duration-500 hover:shadow-[0_0_40px_-4px_var(--gold)]">
                   <img
                     src={photo.image_url}
                     alt={photo.caption ?? "Baby Azurie Sage"}
