@@ -56,7 +56,7 @@ export const listWishlist = createServerFn({ method: "GET" }).handler(async () =
   const client = publicClient();
   const { data, error } = await client
     .from("wishlist_items")
-    .select("id, name, image_url, reserved_by_name, sort_order")
+    .select("id, name, image_url, reserved_by_name, reserved_count, quantity, sort_order")
     .order("sort_order", { ascending: true });
 
   if (error) {
@@ -66,6 +66,7 @@ export const listWishlist = createServerFn({ method: "GET" }).handler(async () =
 
   return resolveImages(client, data ?? []);
 });
+
 
 export const listGalleryPhotos = createServerFn({ method: "GET" }).handler(async () => {
   const client = publicClient();
