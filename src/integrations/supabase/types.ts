@@ -92,8 +92,10 @@ export type Database = {
           id: string
           image_url: string
           name: string
+          quantity: number
           reserved_at: string | null
           reserved_by_name: string | null
+          reserved_count: number
           sort_order: number
         }
         Insert: {
@@ -101,8 +103,10 @@ export type Database = {
           id?: string
           image_url: string
           name: string
+          quantity?: number
           reserved_at?: string | null
           reserved_by_name?: string | null
+          reserved_count?: number
           sort_order?: number
         }
         Update: {
@@ -110,8 +114,10 @@ export type Database = {
           id?: string
           image_url?: string
           name?: string
+          quantity?: number
           reserved_at?: string | null
           reserved_by_name?: string | null
+          reserved_count?: number
           sort_order?: number
         }
         Relationships: []
@@ -127,6 +133,14 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      reserve_wishlist_item: {
+        Args: { _item_id: string; _name: string }
+        Returns: {
+          id: string
+          quantity: number
+          reserved_count: number
+        }[]
       }
     }
     Enums: {

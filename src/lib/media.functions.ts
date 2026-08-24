@@ -87,3 +87,48 @@ export const deleteGalleryPhoto = createServerFn({ method: "POST" })
     }
     return { ok: true };
   });
+
+const quantitySchema = z.object({
+  id: z.string().uuid(),
+  quantity: z.number().int().min(1).max(99),
+});
+
+export const setWishlistQuantity = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => quantitySchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("wishlist_items")
+      .update({ quantity: data.quantity })
+      .eq("id", data.id);
+    if (error) {
+      console.error("Set wishlist quantity failed", error.message);
+      throw new Error("Could not update the quantity. It may be lower than the reservations made.");
+    }
+    return { ok: true };
+  });
+
+const reservationSchema = z.object({
+  id: z.string().uuid(),
+  reserved_count: z.number().int().min(0).max(99),
+});
+
+export const setWishlistReservations = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => reservationSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const patch =
+      data.reserved_count === 0
+        ? { reserved_count: 0, reserved_by_name: null, reserved_at: null }
+        : { reserved_count: data.reserved_count };
+    const { error } = await context.supabase
+      .from("wishlist_items")
+      .update(patch)
+      .eq("id", data.id);
+
+    if (error) {
+      console.error("Set wishlist reservations failed", error.message);
+      throw new Error("Could not update reservations. It may exceed the gift's quantity.");
+    }
+    return { ok: true };
+  });

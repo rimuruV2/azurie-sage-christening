@@ -9,6 +9,8 @@ import {
   addWishlistItem,
   deleteGalleryPhoto,
   deleteWishlistItem,
+  setWishlistQuantity,
+  setWishlistReservations,
 } from "@/lib/media.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,6 +59,28 @@ function WishlistManager() {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const setQuantity = useServerFn(setWishlistQuantity);
+  const setReservations = useServerFn(setWishlistReservations);
+
+  const updateQuantity = useMutation({
+    mutationFn: (input: { id: string; quantity: number }) => setQuantity({ data: input }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wishlist_items"] });
+      toast.success("Quantity updated.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const updateReservations = useMutation({
+    mutationFn: (input: { id: string; reserved_count: number }) => setReservations({ data: input }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wishlist_items"] });
+      toast.success("Reservations updated.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     const file = fileRef.current?.files?.[0];
@@ -104,19 +128,74 @@ function WishlistManager() {
         {items.map((item) => (
           <li key={item.id} className="overflow-hidden rounded-2xl border border-border">
             <img src={item.image_url} alt={item.name} className="aspect-square w-full object-contain" />
-            <div className="p-2 text-center">
+            <div className="space-y-2 p-2 text-center">
               <p className="truncate text-xs text-muted-foreground">{item.name}</p>
-              {item.reserved_by_name && (
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70">Reserved</p>
-              )}
-              <button
-                type="button"
-                onClick={() => remove.mutate(item.id)}
-                className="mt-1 text-[11px] text-destructive underline underline-offset-2"
-              >
-                Remove
-              </button>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70">
+                {item.reserved_count} of {item.quantity} reserved
+              </p>
+              <label className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground">
+                Qty
+                <input
+                  type="number"
+                  min={Math.max(item.reserved_count, 1)}
+                  max={99}
+                  defaultValue={item.quantity}
+                  onBlur={(e) => {
+                    const quantity = Number(e.target.value);
+                    if (!Number.isInteger(quantity) || quantity === item.quantity) return;
+                    updateQuantity.mutate({ id: item.id, quantity });
+                  }}
+                  className="w-14 rounded-lg border border-border bg-background px-2 py-1 text-center text-xs"
+                />
+              </label>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {item.reserved_count > 0 && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateReservations.mutate({
+                        id: item.id,
+                        reserved_count: item.reserved_count - 1,
+                      })
+                    }
+                    className="text-[11px] text-primary underline underline-offset-2"
+                  >
+                    Free one
+                  </button>
+                )}
+                {item.reserved_count > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => updateReservations.mutate({ id: item.id, reserved_count: 0 })}
+                    className="text-[11px] text-primary underline underline-offset-2"
+                  >
+                    Clear all
+                  </button>
+                )}
+                {item.reserved_count < item.quantity && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateReservations.mutate({
+                        id: item.id,
+                        reserved_count: item.reserved_count + 1,
+                      })
+                    }
+                    className="text-[11px] text-primary underline underline-offset-2"
+                  >
+                    Mark reserved
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => remove.mutate(item.id)}
+                  className="text-[11px] text-destructive underline underline-offset-2"
+                >
+                  Remove
+                </button>
+              </div>
             </div>
+
           </li>
         ))}
       </ul>

@@ -56,7 +56,7 @@ export const listWishlist = createServerFn({ method: "GET" }).handler(async () =
   const client = publicClient();
   const { data, error } = await client
     .from("wishlist_items")
-    .select("id, name, image_url, reserved_by_name, sort_order")
+    .select("id, name, image_url, reserved_by_name, reserved_count, quantity, sort_order")
     .order("sort_order", { ascending: true });
 
   if (error) {
@@ -66,6 +66,7 @@ export const listWishlist = createServerFn({ method: "GET" }).handler(async () =
 
   return resolveImages(client, data ?? []);
 });
+
 
 export const listGalleryPhotos = createServerFn({ method: "GET" }).handler(async () => {
   const client = publicClient();
@@ -90,12 +91,10 @@ const reserveSchema = z.object({
 export const reserveWishlistItem = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => reserveSchema.parse(input))
   .handler(async ({ data }) => {
-    const { data: updated, error } = await publicClient()
-      .from("wishlist_items")
-      .update({ reserved_by_name: data.name, reserved_at: new Date().toISOString() })
-      .eq("id", data.id)
-      .is("reserved_by_name", null)
-      .select("id, name, image_url, reserved_by_name, sort_order");
+    const { data: updated, error } = await publicClient().rpc("reserve_wishlist_item", {
+      _item_id: data.id,
+      _name: data.name,
+    });
 
     if (error) {
       console.error("Reserve failed", error.message);
@@ -103,8 +102,9 @@ export const reserveWishlistItem = createServerFn({ method: "POST" })
     }
 
     if (!updated || updated.length === 0) {
-      throw new Error("Someone just reserved this gift. Please pick another one.");
+      throw new Error("This gift is fully reserved already. Please pick another one.");
     }
 
     return updated[0];
   });
+

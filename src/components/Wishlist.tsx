@@ -9,8 +9,11 @@ type Item = {
   name: string;
   image_url: string;
   reserved_by_name: string | null;
+  reserved_count: number;
+  quantity: number;
   sort_order: number;
 };
+
 
 export function Wishlist() {
   const fetchWishlist = useServerFn(listWishlist);
@@ -53,7 +56,8 @@ export function Wishlist() {
     <>
       <ul className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-3">
         {items.map((item) => {
-          const reserved = Boolean(item.reserved_by_name);
+          const remaining = Math.max(item.quantity - item.reserved_count, 0);
+          const reserved = remaining === 0;
           return (
             <li
               key={item.id}
@@ -82,7 +86,9 @@ export function Wishlist() {
                     Reserved
                   </p>
                 ) : (
-                  <p className="mt-1 text-xs uppercase tracking-[0.2em] text-primary">Available</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.2em] text-primary">
+                    {item.quantity > 1 ? `${remaining} of ${item.quantity} left` : "Available"}
+                  </p>
                 )}
               </div>
             </li>
