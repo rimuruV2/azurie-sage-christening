@@ -94,10 +94,6 @@ export function Wishlist() {
             </li>
           );
         })}
-
-            </li>
-          );
-        })}
       </ul>
 
       {active && (
