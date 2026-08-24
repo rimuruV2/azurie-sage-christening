@@ -9,8 +9,11 @@ type Item = {
   name: string;
   image_url: string;
   reserved_by_name: string | null;
+  reserved_count: number;
+  quantity: number;
   sort_order: number;
 };
+
 
 export function Wishlist() {
   const fetchWishlist = useServerFn(listWishlist);
