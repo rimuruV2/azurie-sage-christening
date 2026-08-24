@@ -92,14 +92,18 @@ export function PhotoSlideshow() {
                 key={`${photo.id}-${i}`}
                 className="w-1/3 shrink-0 px-1.5"
               >
-                <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[0_0_28px_-6px_var(--gold)] transition-shadow duration-500 hover:shadow-[0_0_40px_-4px_var(--gold)]">
+                <button
+                  type="button"
+                  onClick={() => setSelectedPhoto({ image_url: photo.image_url, caption: photo.caption })}
+                  className="block w-full overflow-hidden rounded-3xl border border-border bg-card text-left shadow-[0_0_28px_-6px_var(--gold)] transition-shadow duration-500 hover:shadow-[0_0_40px_-4px_var(--gold)] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
                   <img
                     src={photo.image_url}
                     alt={photo.caption ?? "Baby Azurie Sage"}
                     loading="lazy"
                     className="h-40 w-full bg-background object-cover sm:h-60"
                   />
-                </div>
+                </button>
                 {photo.caption && (
                   <figcaption className="mt-2 text-center text-xs text-muted-foreground">
                     {photo.caption}
