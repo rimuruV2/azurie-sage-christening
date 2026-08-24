@@ -117,14 +117,15 @@ export const setWishlistReservations = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => reservationSchema.parse(input))
   .handler(async ({ data, context }) => {
+    const patch =
+      data.reserved_count === 0
+        ? { reserved_count: 0, reserved_by_name: null, reserved_at: null }
+        : { reserved_count: data.reserved_count };
     const { error } = await context.supabase
       .from("wishlist_items")
-      .update({
-        reserved_count: data.reserved_count,
-        reserved_by_name: data.reserved_count === 0 ? null : undefined,
-        reserved_at: data.reserved_count === 0 ? null : undefined,
-      })
+      .update(patch)
       .eq("id", data.id);
+
     if (error) {
       console.error("Set wishlist reservations failed", error.message);
       throw new Error("Could not update reservations. It may exceed the gift's quantity.");
