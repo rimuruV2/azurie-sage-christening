@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { listGalleryPhotos } from "@/lib/wishlist.functions";
 
 export function PhotoSlideshow() {
@@ -14,6 +14,7 @@ export function PhotoSlideshow() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
+  const [selectedPhoto, setSelectedPhoto] = useState<null | { image_url: string; caption: string | null }>(null);
   const count = photos.length;
 
   useEffect(() => {
@@ -91,14 +92,18 @@ export function PhotoSlideshow() {
                 key={`${photo.id}-${i}`}
                 className="w-1/3 shrink-0 px-1.5"
               >
-                <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[0_0_28px_-6px_var(--gold)] transition-shadow duration-500 hover:shadow-[0_0_40px_-4px_var(--gold)]">
+                <button
+                  type="button"
+                  onClick={() => setSelectedPhoto({ image_url: photo.image_url, caption: photo.caption })}
+                  className="block w-full overflow-hidden rounded-3xl border border-border bg-card text-left shadow-[0_0_28px_-6px_var(--gold)] transition-shadow duration-500 hover:shadow-[0_0_40px_-4px_var(--gold)] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
                   <img
                     src={photo.image_url}
                     alt={photo.caption ?? "Baby Azurie Sage"}
                     loading="lazy"
                     className="h-40 w-full bg-background object-cover sm:h-60"
                   />
-                </div>
+                </button>
                 {photo.caption && (
                   <figcaption className="mt-2 text-center text-xs text-muted-foreground">
                     {photo.caption}
@@ -145,6 +150,39 @@ export function PhotoSlideshow() {
           />
         ))}
       </div>
+
+      {selectedPhoto && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 p-4 backdrop-blur-sm"
+          onClick={() => setSelectedPhoto(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            type="button"
+            onClick={() => setSelectedPhoto(null)}
+            aria-label="Close photo"
+            className="absolute right-4 top-4 rounded-full bg-background/90 p-2 text-foreground shadow-sm transition hover:bg-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          <figure
+            className="max-h-[85vh] max-w-5xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={selectedPhoto.image_url}
+              alt={selectedPhoto.caption ?? "Baby Azurie Sage"}
+              className="max-h-[80vh] w-auto rounded-3xl border border-border bg-card object-contain shadow-[0_0_50px_-10px_var(--gold)]"
+            />
+            {selectedPhoto.caption && (
+              <figcaption className="mt-4 text-center text-sm text-muted-foreground">
+                {selectedPhoto.caption}
+              </figcaption>
+            )}
+          </figure>
+        </div>
+      )}
     </div>
   );
 }
