@@ -9,6 +9,8 @@ import {
   addWishlistItem,
   deleteGalleryPhoto,
   deleteWishlistItem,
+  setWishlistQuantity,
+  setWishlistReservations,
 } from "@/lib/media.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
