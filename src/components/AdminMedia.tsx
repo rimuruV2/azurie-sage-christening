@@ -148,81 +148,105 @@ function WishlistManager() {
         </Button>
       </form>
 
-      <ul className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {items.map((item) => (
-          <li key={item.id} className="overflow-hidden rounded-2xl border border-border">
-            <img src={item.image_url} alt={item.name} className="aspect-square w-full object-contain" />
-            <div className="space-y-2 p-2 text-center">
-              <p className="truncate text-xs text-muted-foreground">{item.name}</p>
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70">
-                {item.reserved_count} of {item.quantity} reserved
-              </p>
-              <label className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground">
-                Qty
-                <input
-                  type="number"
-                  min={Math.max(item.reserved_count, 1)}
-                  max={99}
-                  defaultValue={item.quantity}
-                  onBlur={(e) => {
-                    const quantity = Number(e.target.value);
-                    if (!Number.isInteger(quantity) || quantity === item.quantity) return;
-                    updateQuantity.mutate({ id: item.id, quantity });
-                  }}
-                  className="w-14 rounded-lg border border-border bg-background px-2 py-1 text-center text-xs"
-                />
-              </label>
-              <div className="flex flex-wrap items-center justify-center gap-2">
-                {item.reserved_count > 0 && (
+      <ul className="mt-6 space-y-4">
+        {items.map((item) => {
+          const itemReservations = reservations.filter((r) => r.item_id === item.id);
+          return (
+            <li
+              key={item.id}
+              className="flex flex-col gap-4 rounded-2xl border border-border p-3 sm:flex-row"
+            >
+              <img
+                src={item.image_url}
+                alt={item.name}
+                className="h-28 w-28 shrink-0 rounded-xl bg-background object-contain"
+              />
+              <div className="min-w-0 flex-1 space-y-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <p className="text-sm font-medium">{item.name}</p>
+                  <span className="text-[10px] uppercase tracking-widest text-muted-foreground/70">
+                    {item.reserved_count} of {item.quantity} reserved
+                  </span>
+                  <label className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                    Qty
+                    <input
+                      type="number"
+                      min={Math.max(item.reserved_count, 1)}
+                      max={99}
+                      defaultValue={item.quantity}
+                      onBlur={(e) => {
+                        const quantity = Number(e.target.value);
+                        if (!Number.isInteger(quantity) || quantity === item.quantity) return;
+                        updateQuantity.mutate({ id: item.id, quantity });
+                      }}
+                      className="w-14 rounded-lg border border-border bg-background px-2 py-1 text-center text-xs"
+                    />
+                  </label>
                   <button
                     type="button"
-                    onClick={() =>
-                      updateReservations.mutate({
-                        id: item.id,
-                        reserved_count: item.reserved_count - 1,
-                      })
-                    }
-                    className="text-[11px] text-primary underline underline-offset-2"
+                    onClick={() => remove.mutate(item.id)}
+                    className="text-[11px] text-destructive underline underline-offset-2"
                   >
-                    Free one
+                    Remove gift
                   </button>
-                )}
-                {item.reserved_count > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => updateReservations.mutate({ id: item.id, reserved_count: 0 })}
-                    className="text-[11px] text-primary underline underline-offset-2"
-                  >
-                    Clear all
-                  </button>
-                )}
-                {item.reserved_count < item.quantity && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      updateReservations.mutate({
-                        id: item.id,
-                        reserved_count: item.reserved_count + 1,
-                      })
-                    }
-                    className="text-[11px] text-primary underline underline-offset-2"
-                  >
-                    Mark reserved
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => remove.mutate(item.id)}
-                  className="text-[11px] text-destructive underline underline-offset-2"
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
+                </div>
 
-          </li>
-        ))}
+                {itemReservations.length > 0 ? (
+                  <ul className="space-y-1">
+                    {itemReservations.map((r) => (
+                      <li key={r.id} className="flex items-center gap-2 text-xs">
+                        <span className="truncate">{r.name}</span>
+                        <span className="text-muted-foreground/70">
+                          {new Date(r.created_at).toLocaleDateString()}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => dropReservation.mutate(r.id)}
+                          className="text-[11px] text-destructive underline underline-offset-2"
+                        >
+                          Delete
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-xs text-muted-foreground">No reservations yet.</p>
+                )}
+
+                <form
+                  className="flex flex-wrap items-center gap-2"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const value = (reserveNames[item.id] ?? "").trim();
+                    if (value.length < 2) {
+                      toast.error("Enter a name.");
+                      return;
+                    }
+                    if (item.reserved_count >= item.quantity) {
+                      toast.error("This gift is fully reserved. Increase the quantity first.");
+                      return;
+                    }
+                    createReservation.mutate({ item_id: item.id, name: value });
+                  }}
+                >
+                  <Input
+                    value={reserveNames[item.id] ?? ""}
+                    onChange={(e) =>
+                      setReserveNames((prev) => ({ ...prev, [item.id]: e.target.value }))
+                    }
+                    placeholder="Add reserver name"
+                    className="h-8 w-48 text-xs"
+                  />
+                  <Button type="submit" size="sm" variant="secondary" className="h-8 rounded-full text-xs">
+                    Add
+                  </Button>
+                </form>
+              </div>
+            </li>
+          );
+        })}
       </ul>
+
     </section>
   );
 }
