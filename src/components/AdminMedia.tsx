@@ -60,7 +60,20 @@ function WishlistManager() {
   });
 
   const setQuantity = useServerFn(setWishlistQuantity);
-  const setReservations = useServerFn(setWishlistReservations);
+  const fetchReservations = useServerFn(listWishlistReservations);
+  const addReservation = useServerFn(addWishlistReservation);
+  const removeReservation = useServerFn(deleteWishlistReservation);
+  const [reserveNames, setReserveNames] = useState<Record<string, string>>({});
+
+  const { data: reservations = [] } = useQuery({
+    queryKey: ["wishlist_reservations"],
+    queryFn: () => fetchReservations(),
+  });
+
+  const refreshAll = () => {
+    queryClient.invalidateQueries({ queryKey: ["wishlist_items"] });
+    queryClient.invalidateQueries({ queryKey: ["wishlist_reservations"] });
+  };
 
   const updateQuantity = useMutation({
     mutationFn: (input: { id: string; quantity: number }) => setQuantity({ data: input }),
@@ -71,14 +84,25 @@ function WishlistManager() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const updateReservations = useMutation({
-    mutationFn: (input: { id: string; reserved_count: number }) => setReservations({ data: input }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["wishlist_items"] });
-      toast.success("Reservations updated.");
+  const createReservation = useMutation({
+    mutationFn: (input: { item_id: string; name: string }) => addReservation({ data: input }),
+    onSuccess: (_d, input) => {
+      refreshAll();
+      setReserveNames((prev) => ({ ...prev, [input.item_id]: "" }));
+      toast.success("Reservation added.");
     },
     onError: (e: Error) => toast.error(e.message),
   });
+
+  const dropReservation = useMutation({
+    mutationFn: (id: string) => removeReservation({ data: { id } }),
+    onSuccess: () => {
+      refreshAll();
+      toast.success("Reservation removed.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
 
 
   async function handleSubmit(event: React.FormEvent) {
