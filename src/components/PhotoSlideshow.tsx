@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
@@ -15,7 +15,40 @@ export function PhotoSlideshow() {
   const [paused, setPaused] = useState(false);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
   const [selectedPhoto, setSelectedPhoto] = useState<null | { image_url: string; caption: string | null }>(null);
+  const [dragOffset, setDragOffset] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const dragStart = useRef<number | null>(null);
+  const dragged = useRef(false);
   const count = photos.length;
+
+  const slideWidth = () => (trackRef.current?.clientWidth ?? 900) / 3;
+
+  function onPointerDown(e: React.PointerEvent) {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    dragStart.current = e.clientX;
+    dragged.current = false;
+    setPaused(true);
+    setTransitionEnabled(false);
+  }
+
+  function onPointerMove(e: React.PointerEvent) {
+    if (dragStart.current === null) return;
+    const delta = e.clientX - dragStart.current;
+    if (Math.abs(delta) > 5) dragged.current = true;
+    setDragOffset(delta);
+  }
+
+  function endDrag() {
+    if (dragStart.current === null) return;
+    const width = slideWidth();
+    const steps = Math.round(-dragOffset / width);
+    dragStart.current = null;
+    setDragOffset(0);
+    setTransitionEnabled(true);
+    if (steps !== 0) setIndex((i) => i + steps);
+    setPaused(false);
+  }
+
 
   useEffect(() => {
     if (count) setIndex(count);
@@ -82,10 +115,21 @@ export function PhotoSlideshow() {
       onMouseLeave={() => setPaused(false)}
     >
       <div className="relative">
-        <div className="overflow-hidden rounded-3xl">
+        <div
+          ref={trackRef}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
+          onPointerLeave={endDrag}
+          className="cursor-grab overflow-hidden rounded-3xl active:cursor-grabbing"
+          style={{ touchAction: "pan-y" }}
+        >
           <div
             className={`flex ${transitionEnabled ? "transition-transform duration-700 ease-out" : ""}`}
-            style={{ transform: `translateX(-${index * (100 / 3)}%)` }}
+            style={{
+              transform: `translateX(calc(-${index * (100 / 3)}% + ${dragOffset}px))`,
+            }}
           >
             {displayPhotos.map((photo, i) => (
               <figure
@@ -94,9 +138,14 @@ export function PhotoSlideshow() {
               >
                 <button
                   type="button"
-                  onClick={() => setSelectedPhoto({ image_url: photo.image_url, caption: photo.caption })}
+                  draggable={false}
+                  onClick={() => {
+                    if (dragged.current) return;
+                    setSelectedPhoto({ image_url: photo.image_url, caption: photo.caption });
+                  }}
                   className="block w-full overflow-hidden rounded-3xl border border-border bg-card text-left shadow-[0_0_28px_-6px_var(--gold)] transition-shadow duration-500 hover:shadow-[0_0_40px_-4px_var(--gold)] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
+
                   <img
                     src={photo.image_url}
                     alt={photo.caption ?? "Baby Azurie Sage"}
