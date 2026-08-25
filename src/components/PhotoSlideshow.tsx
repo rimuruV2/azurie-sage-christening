@@ -115,10 +115,21 @@ export function PhotoSlideshow() {
       onMouseLeave={() => setPaused(false)}
     >
       <div className="relative">
-        <div className="overflow-hidden rounded-3xl">
+        <div
+          ref={trackRef}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
+          onPointerLeave={endDrag}
+          className="cursor-grab overflow-hidden rounded-3xl active:cursor-grabbing"
+          style={{ touchAction: "pan-y" }}
+        >
           <div
             className={`flex ${transitionEnabled ? "transition-transform duration-700 ease-out" : ""}`}
-            style={{ transform: `translateX(-${index * (100 / 3)}%)` }}
+            style={{
+              transform: `translateX(calc(-${index * (100 / 3)}% + ${dragOffset}px))`,
+            }}
           >
             {displayPhotos.map((photo, i) => (
               <figure
@@ -127,9 +138,14 @@ export function PhotoSlideshow() {
               >
                 <button
                   type="button"
-                  onClick={() => setSelectedPhoto({ image_url: photo.image_url, caption: photo.caption })}
+                  draggable={false}
+                  onClick={() => {
+                    if (dragged.current) return;
+                    setSelectedPhoto({ image_url: photo.image_url, caption: photo.caption });
+                  }}
                   className="block w-full overflow-hidden rounded-3xl border border-border bg-card text-left shadow-[0_0_28px_-6px_var(--gold)] transition-shadow duration-500 hover:shadow-[0_0_40px_-4px_var(--gold)] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
+
                   <img
                     src={photo.image_url}
                     alt={photo.caption ?? "Baby Azurie Sage"}
