@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
@@ -15,7 +15,40 @@ export function PhotoSlideshow() {
   const [paused, setPaused] = useState(false);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
   const [selectedPhoto, setSelectedPhoto] = useState<null | { image_url: string; caption: string | null }>(null);
+  const [dragOffset, setDragOffset] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const dragStart = useRef<number | null>(null);
+  const dragged = useRef(false);
   const count = photos.length;
+
+  const slideWidth = () => (trackRef.current?.clientWidth ?? 900) / 3;
+
+  function onPointerDown(e: React.PointerEvent) {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    dragStart.current = e.clientX;
+    dragged.current = false;
+    setPaused(true);
+    setTransitionEnabled(false);
+  }
+
+  function onPointerMove(e: React.PointerEvent) {
+    if (dragStart.current === null) return;
+    const delta = e.clientX - dragStart.current;
+    if (Math.abs(delta) > 5) dragged.current = true;
+    setDragOffset(delta);
+  }
+
+  function endDrag() {
+    if (dragStart.current === null) return;
+    const width = slideWidth();
+    const steps = Math.round(-dragOffset / width);
+    dragStart.current = null;
+    setDragOffset(0);
+    setTransitionEnabled(true);
+    if (steps !== 0) setIndex((i) => i + steps);
+    setPaused(false);
+  }
+
 
   useEffect(() => {
     if (count) setIndex(count);
