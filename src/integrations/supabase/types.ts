@@ -122,6 +122,35 @@ export type Database = {
         }
         Relationships: []
       }
+      wishlist_reservations: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wishlist_reservations_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "wishlist_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
