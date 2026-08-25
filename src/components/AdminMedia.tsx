@@ -7,10 +7,12 @@ import { listGalleryPhotos, listWishlist } from "@/lib/wishlist.functions";
 import {
   addGalleryPhoto,
   addWishlistItem,
+  addWishlistReservation,
   deleteGalleryPhoto,
   deleteWishlistItem,
+  deleteWishlistReservation,
+  listWishlistReservations,
   setWishlistQuantity,
-  setWishlistReservations,
 } from "@/lib/media.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
