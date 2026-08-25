@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.sync_wishlist_reserved_count() FROM PUBLIC, anon, authenticated;
