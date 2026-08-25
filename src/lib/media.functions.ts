@@ -132,3 +132,52 @@ export const setWishlistReservations = createServerFn({ method: "POST" })
     }
     return { ok: true };
   });
+
+export const listWishlistReservations = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("wishlist_reservations")
+      .select("id, item_id, name, created_at")
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error("List reservations failed", error.message);
+      throw new Error("Could not load the reservations.");
+    }
+    return data ?? [];
+  });
+
+const addReservationSchema = z.object({
+  item_id: z.string().uuid(),
+  name: z.string().trim().min(2).max(80),
+});
+
+export const addWishlistReservation = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => addReservationSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("wishlist_reservations")
+      .insert({ item_id: data.item_id, name: data.name });
+    if (error) {
+      console.error("Add reservation failed", error.message);
+      throw new Error("Could not add this reservation. The gift may be fully reserved.");
+    }
+    return { ok: true };
+  });
+
+export const deleteWishlistReservation = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => idSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("wishlist_reservations")
+      .delete()
+      .eq("id", data.id);
+    if (error) {
+      console.error("Delete reservation failed", error.message);
+      throw new Error("Could not remove this reservation.");
+    }
+    return { ok: true };
+  });
