@@ -87,7 +87,7 @@ export function Wishlist() {
                   </p>
                 ) : (
                   <p className="mt-1 text-xs uppercase tracking-[0.2em] text-primary">
-                    {item.quantity > 1 ? `${remaining} of ${item.quantity} left` : "Available"}
+                    Available
                   </p>
                 )}
               </div>
